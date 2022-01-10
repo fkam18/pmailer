@@ -1,3 +1,42 @@
+10 Jan 2022 fkam: 
+Pmailer
+Pmailer picks a email job in database, send the email directly to the recipient's MX, and then loop back to try another. If email delivery failed, it will add try count to the job and pick another one with a smaller try count but eventually will keep retrying.
+To deposit a job, just insert a job row in database with "tries" = 0.
+Jobs with "tries" = -1 means it's done.
+Can run multiple pmailer concurrently as it does row locking so no pmailer will pick up the same job
+
+WHEN to use pmailer? 
+- send only for mass mailing/notification etc
+- need tight control of mail sending
+- do not want to support/use full scale mailer like Postfix
+
+TOD
+- need to clean up the print debug lines
+- need to do more testing with different MX for RFC822 compliance
+- need to do transaction log history
+- need to write a submit job script
+- need to write a clean archive job script
+- need to have a search script to search for job history in log
+- need to support SSL/TLS 
+- need to support uuencode/base64 mime email content
+
+To Setup:
+- mysql -u -p < setupdb.sql
+- mysql -u -p < insertdata.sql (test data)
+- ./pmailer 
+
+- change orgsender in pmailer.py to your sending email
+- change myhost in smtp.py to your sending host; need SPF for this host/IP
+
+Files:
+- pmailer.py - main driver
+- smtp.py - smtp related modules
+- util.py - utilities modules
+- db.py - database related modules
+- setupdb.sql - schema
+- insertdata.sql - test data
+
+9 Jan 2022 fkam:
 pip3 install dnspython
 
 python 3.6.8 - smtplib - bug sendmail() not raising any exceptions at all; so use docmd() instead

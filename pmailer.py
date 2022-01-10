@@ -1,56 +1,27 @@
 #!/usr/bin/python3
-import smtplib
-from util import getmx
 
+#from db import dbconn
+#from db import dbcheck
+#from db import dbpickjob
+from db import *
+from smtp import *
+import time
 
-sender = 'sales@38cloud.com'
-receivers = 'm@hmm.im'
+# set your own organizational sender
+orgsender = 'sales@38cloud.com'
+#
 
-message = """From: <sales@38cloud.com>
-To: <m@hmm.im>
-Subject: SMTP e-mail test
-
-
-This is a test e-mail message.
-"""
-
-mxhost = getmx('hmm.im')
-print(mxhost)
-
-try:
-  with smtplib.SMTP(mxhost,25) as s1:
-#  s1.set_debuglevel(1)
-#  s1.sendmail(sender, receivers, message)
-      r=s1.docmd("ehlo", "v151.38cloud.com")
-      print(r[0])
-      print(r[1])
-      print(f"<{sender}>")
-      r=s1.docmd("MAIL FROM:", f"<{sender}>")
-      print(r[0])
-      print(r[1])
-      if (r[0] > 499):
-        raise Exception(r[0])
-      print(f"<{receivers}>")
-      r=s1.docmd("RCPT TO:", f"<{receivers}>")
-      print(r[0])
-      print(r[1])
-      if (r[0] > 499):
-        raise Exception(r[0])
-      r=s1.docmd("DATA", f"\n{message}\n.\n")
-      print(r[0])
-      print(r[1])
-      if (r[0] != 250):
-        raise Exception(r[0])
-      print("success")
-#except smtplib.SMTPException as e:
-#  print(e)
-    #except smtplib.SMTPResponseException as e:
-    #  print(e.smtp_error)
-    #  print(e.smtp_code)
-    #except smtplib.SMTPRecipientsRefused as e:
-    #  print(e.recipients)
-except Exception as e:
-    #  print("error" + repr(e))
-  print( e)
-finally:
-  print("finished")    
+db = dbconn()
+#dbcheck(db)
+while True:
+  job=dbpickjob(db)
+  if (len(job) > 0):
+    print(job['id'], job['tries'])
+    if (delivermail(orgsender, job['recipient'], job['subject'], job['message']) ):
+      print("job done")
+      # the job log part needs to be done later
+    else:
+      dbretryjob(db, job['id'], job['tries']+1)
+  else:
+    print("no job found")
+  time.sleep(1)
