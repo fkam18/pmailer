@@ -14,7 +14,7 @@ def dbconn():
     sql = "SET AUTOCOMMIT=0"
     r1=c1.execute(sql)
     db.commit()
-    print(repr(r1))
+    #print(repr(r1))
   except Exception as e:
     print(repr(e))
     db.rollback()
@@ -34,7 +34,21 @@ def dbcheck(db):
     print(repr(e))
     db.rollback()
     sys.exit()
-  
+
+def dbinsertjob(db, receiver, subject, message, submittime):
+  try:
+    c1 = db.cursor()
+    sql = f"insert into mails (recipient, subject, message, tries, submitted, sent) values ('{receiver}', '{subject}', '{message}', 0, '{submittime}', '{submittime}')"
+    #print(sql)
+    r1 = c1.execute(sql)
+    db.commit()
+    return True
+  except Exception as e:
+    print("Error:")
+    print(repr(e))
+    db.rollback()
+    return False
+   
 def dbpickjob(db):
   r2 = ()
   try:

@@ -1,3 +1,10 @@
+10 Jan 2022 night fkam:
+- added submit.py
+Synopsis: cat emailfile | ./submit.py 'recipient' 'subject'
+- submit a job - assuming the email text content is in emailfile
+- resolved a bug in smtp.py (added QUIT) - guess that's why previously a SMTPResponseException was raised upon closing without QUIT
+- tested OK with gmail server, but with Postfix target server, there's a 500 syntax error returning after a 250 success in queueing the message so ... temporarily ignore that for now as it can be delivered 
+
 10 Jan 2022 fkam: 
 Pmailer
 Pmailer picks a email job in database, send the email directly to the recipient's MX, and then loop back to try another. If email delivery failed, it will add try count to the job and pick another one with a smaller try count but eventually will keep retrying.

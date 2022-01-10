@@ -42,6 +42,9 @@ def delivermail(sender, receiver, subject, msg):
       if (int(r[0]) >= 400):
         raise Exception(r[0])
       print("success")
+      r=s1.docmd("QUIT")
+      print(r[0])
+      print(r[1])
       return True
   except smtplib.SMTPResponseException as e:
     # obviously no reason to raise a 250 exception so likely a smtplib bug; anyway treated as a handler
