@@ -1,0 +1,9 @@
+DROP DATABASE IF EXISTS pmailer;
+CREATE DATABASE pmailer;
+DROP USER 'pmailer'@'localhost';
+CREATE USER 'pmailer'@'localhost' IDENTIFIED BY '1Pm3aIl4e5r';
+GRANT ALL PRIVILEGES ON pmailer.* TO 'pmailer'@'localhost';
+FLUSH PRIVILEGES;
+USE pmailer;
+CREATE TABLE mails (id INT NOT NULL AUTO_INCREMENT,  recipient VARCHAR(255), subject VARCHAR(255), message LONGTEXT CHARACTER SET utf8mb4, tries SMALLINT, submitted DATETIME, sent DATETIME, PRIMARY KEY (id)) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4 COLLATE=utf8mb4_bin AUTO_INCREMENT=1 ;
+

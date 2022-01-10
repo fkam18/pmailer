@@ -1,0 +1,10 @@
+pip3 install dnspython
+
+python 3.6.8 - smtplib - bug sendmail() not raising any exceptions at all; so use docmd() instead
+
+db:
+- picked pymysql ... can use mysql-connector etc 
+- autocommit set to 0; need explicit commit in codes
+- isolation -> used select ... for update (row locking) 
+- status field is 0 for pending jobs; 1 for completed job
+- there should be another log table for job transaction history
