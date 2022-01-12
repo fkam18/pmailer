@@ -4,6 +4,7 @@ from db import *
 from datetime import datetime
 import sys
 
+initlog()
 if (len(sys.argv) != 3):
   print("Synopsis: cat emailfile | ./submit.py 'recipient' 'subject'");
   quit()
@@ -18,8 +19,8 @@ for line in sys.stdin:
 
 db = dbconn()
 if (dbinsertjob(db, recipient, subject, message, now)):
-  print("done")
+  logging.debug("done")
 else:
-  print("something went wrong; not done")
+  logging.debug("something went wrong; not done")
 quit()
 

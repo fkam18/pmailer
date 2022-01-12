@@ -1,3 +1,7 @@
+12 Jan 2022 fkam:
+- changed print debug lines to logging.debug() - see globalvar.py 
+- every module needs to do from globalvar import * and then call initlog()
+
 10 Jan 2022 night fkam:
 - added submit.py
 Synopsis: cat emailfile | ./submit.py 'recipient' 'subject'
