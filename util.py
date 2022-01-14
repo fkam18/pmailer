@@ -6,12 +6,17 @@ def getdomain(email):
   return r1[1]
 
 def getmx(domain):
-# better to sort the return list by mx priority; right now just take the 1st one
+  # return the MX with the lowest weight
+  lowestWeight = 9999
+  targetmx = ""
   for x in dns.resolver.resolve(domain, 'MX'):
     mxline = x.to_text()
-    break 
-  mx = mxline.split(' ')
-  mxhost = mx[1]
-  if (mxhost[-1] == '.'):
-    mxhost = mxhost[:-1]
-  return mxhost
+    mx = mxline.split(' ')
+    weight = int(mx[0])
+    #logging.debug(weight)
+    if (weight < lowestWeight):
+      lowestWeight = weight
+      targetmx = mx[1]
+  if (targetmx[-1] == '.'):
+    targetmx = targetmx[:-1]
+  return targetmx

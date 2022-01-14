@@ -2,6 +2,6 @@
 
 from util import getmx
 
-domain = 'gmail.com'
+domain = 'hmm.im'
 mx = getmx(domain)
 print(mx)
